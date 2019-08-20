@@ -153,13 +153,12 @@
 			isa = PBXGroup;
 			children = (
 				30AB6907230BE45B00F6E442 /* AppDelegate.swift */,
-				30AB695E230C17AF00F6E442 /* HeaderSectionViewController.swift */,
-				30AB6960230C1A6900F6E442 /* CategoryCollectionViewCell.swift */,
 				30AB690B230BE45B00F6E442 /* Main.storyboard */,
 				30AB6950230BEE6600F6E442 /* Networking */,
 				30AB694D230BE60300F6E442 /* Models */,
 				30AB6957230BF9F700F6E442 /* Utils */,
 				30AB6958230BFDD700F6E442 /* BeerList */,
+				30AB6962230C752F00F6E442 /* HeaderCategory */,
 				30AB695D230C131400F6E442 /* Beer Detail */,
 				30AB690E230BE45D00F6E442 /* Assets.xcassets */,
 				30AB6910230BE45D00F6E442 /* LaunchScreen.storyboard */,
@@ -237,6 +236,15 @@
 				30AB6959230BFEF000F6E442 /* BeerDetailViewController.swift */,
 			);
 			name = "Beer Detail";
+			sourceTree = "<group>";
+		};
+		30AB6962230C752F00F6E442 /* HeaderCategory */ = {
+			isa = PBXGroup;
+			children = (
+				30AB695E230C17AF00F6E442 /* HeaderSectionViewController.swift */,
+				30AB6960230C1A6900F6E442 /* CategoryCollectionViewCell.swift */,
+			);
+			name = HeaderCategory;
 			sourceTree = "<group>";
 		};
 		5E20E91D2D719187DC05CCEE /* Pods */ = {
