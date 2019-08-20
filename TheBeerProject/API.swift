@@ -16,15 +16,16 @@ public class API: RestClient {
         super.init(baseURL: .base)
     }
     
-    func getBeers(page: Int, beerName: String) -> Promise <JSON> {
-        if beerName != "" {
-             return request(.get, URIString: "beers?page=\(page)&beer_name=\(beerName)&per_page=25", parameters: nil, withQuery: false, withLoader: false)
-        } else {
-             return request(.get, URIString: "beers?page=\(page)&per_page=25", parameters: nil, withQuery: false, withLoader: false)
+    func getBeers(page: Int, beerName: String, category: String) -> Promise <JSON> {
+        var uri = "beers?page=\(page)&per_page=25"
+        if category != "" && category != "All" {
+            uri.append("&malt=\(category)")
         }
-    }
-    
-    func getBeersByCat(page: Int, category: String) -> Promise <JSON> {
-         return request(.get, URIString: "beers?page=\(page)&malts=\(category)&per_page=25", parameters: nil, withQuery: false, withLoader: false)
+        if beerName != "" {
+             uri.append("&beer_name=\(beerName)")
+             return request(.get, URIString: uri, parameters: nil, withQuery: false, withLoader: false)
+        }
+        
+        return request(.get, URIString: uri, parameters: nil, withQuery: false, withLoader: false)
     }
 }

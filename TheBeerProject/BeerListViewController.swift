@@ -33,7 +33,15 @@ class BeerListViewController: UIViewController {
                 tasks.forEach { $0.cancel()}
             }
             beers.removeAll()
-            beerListViewModel?.fetchBeers(page: page, beerName: query!)
+            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "", category: self.category ?? "")
+        }
+    }
+    
+    var category: String? {
+        didSet {
+            page = 1
+            beers.removeAll()
+            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "", category: self.category ?? "")
         }
     }
     
@@ -54,7 +62,11 @@ class BeerListViewController: UIViewController {
     }
 }
 
-extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, BeerListViewModelDelegate {
+extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, BeerListViewModelDelegate, HeaderSectionViewControllerDelegate {
+    func passCategry(category: String) {
+        self.category = category
+    }
+    
     func passBeers(beers: [Beer]) {
         if beers.count > 0 {
             for beer in beers {
@@ -85,7 +97,7 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, Be
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         let lastElement = beers.count - 1
         if((indexPath.row == lastElement)) {
-            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "")
+            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "", category: self.category ?? "")
         }
     }
     
@@ -142,6 +154,7 @@ extension BeerListViewController {
         guard let childViewController = storyboard?.instantiateViewController(withIdentifier: "headerSectionViewController") as? HeaderSectionViewController else {
             return
         }
+        childViewController.delegate = self
         childViewController.view.frame = header!.frame
         addChild(childViewController)
         header!.addSubview(childViewController.view)

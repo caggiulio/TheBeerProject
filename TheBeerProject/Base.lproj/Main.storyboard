@@ -21,7 +21,7 @@
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="NwC-Wu-ull">
                                 <rect key="frame" x="0.0" y="140" width="414" height="722"/>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" name="AppMainColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="beerTableViewCell" rowHeight="248" id="dWl-EL-h7v" customClass="BeerTableViewCell" customModule="TheBeerProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="55.5" width="414" height="248"/>
@@ -270,7 +270,7 @@
                                     <constraint firstItem="ZBi-YR-diF" firstAttribute="top" secondItem="r83-w5-OOO" secondAttribute="top" constant="25" id="vga-Su-jbt"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kTs-eR-NCf">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="kTs-eR-NCf">
                                 <rect key="frame" x="0.0" y="175" width="414" height="80"/>
                                 <color key="backgroundColor" name="AppMainColor"/>
                                 <constraints>
@@ -292,7 +292,19 @@
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qac-oa-Qv9">
                                                     <rect key="frame" x="6.5" y="5" width="114" height="40"/>
-                                                    <color key="backgroundColor" name="Gold"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ifr-oX-Rok">
+                                                            <rect key="frame" x="36.5" y="10.5" width="41.5" height="19.5"/>
+                                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstItem="ifr-oX-Rok" firstAttribute="centerY" secondItem="qac-oa-Qv9" secondAttribute="centerY" id="hIz-0z-GGd"/>
+                                                        <constraint firstItem="ifr-oX-Rok" firstAttribute="centerX" secondItem="qac-oa-Qv9" secondAttribute="centerX" id="xAg-av-1Kz"/>
+                                                    </constraints>
                                                 </view>
                                             </subviews>
                                         </view>
@@ -303,6 +315,7 @@
                                             <constraint firstAttribute="bottom" secondItem="qac-oa-Qv9" secondAttribute="bottom" constant="5" id="gG3-sU-lzo"/>
                                         </constraints>
                                         <connections>
+                                            <outlet property="categoryName" destination="ifr-oX-Rok" id="Bn4-l5-64j"/>
                                             <outlet property="containerCategoryCell" destination="qac-oa-Qv9" id="4Dg-rg-Nnf"/>
                                         </connections>
                                     </collectionViewCell>
