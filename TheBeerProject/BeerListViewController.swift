@@ -15,6 +15,8 @@ import Hero
 class BeerListViewController: UIViewController {
 
     @IBOutlet weak var beerTableView: UITableView!
+    
+    var header: UIView?
     var beerListViewModel: BeerListViewModel?
     var beers: [Beer] = [Beer]() {
         didSet {
@@ -48,6 +50,7 @@ class BeerListViewController: UIViewController {
         beerTableView.estimatedRowHeight = 248
         
         setSearchBar()
+        setHeaderViewPopular()
     }
 }
 
@@ -101,6 +104,14 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, Be
             self.present(vc, animated: true, completion: nil)
         }
     }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 230
+    }
 }
 
 extension BeerListViewController: UISearchBarDelegate {
@@ -122,6 +133,19 @@ extension BeerListViewController: UISearchBarDelegate {
     
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         searchBar.text = query
+    }
+}
+
+extension BeerListViewController {
+    func setHeaderViewPopular() {
+        header = UIView.init(frame: CGRect.init(x: 0, y: 0, width: view.frame.width, height: 230))
+        guard let childViewController = storyboard?.instantiateViewController(withIdentifier: "headerSectionViewController") as? HeaderSectionViewController else {
+            return
+        }
+        childViewController.view.frame = header!.frame
+        addChild(childViewController)
+        header!.addSubview(childViewController.view)
+        didMove(toParent: self)
     }
 }
 

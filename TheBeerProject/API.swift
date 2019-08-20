@@ -23,4 +23,8 @@ public class API: RestClient {
              return request(.get, URIString: "beers?page=\(page)&per_page=25", parameters: nil, withQuery: false, withLoader: false)
         }
     }
+    
+    func getBeersByCat(page: Int, category: String) -> Promise <JSON> {
+         return request(.get, URIString: "beers?page=\(page)&malts=\(category)&per_page=25", parameters: nil, withQuery: false, withLoader: false)
+    }
 }

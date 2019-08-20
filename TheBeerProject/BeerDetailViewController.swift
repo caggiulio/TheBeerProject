@@ -21,31 +21,31 @@ class BeerDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if beer != nil {
-            beerImage.sd_setImage(with: URL(string: (beer?.imageUrl!)!))
-            beerTitle.text = beer?.name
-            beerSubtitle.text = beer?.tagline
-            beerDescr.text = beer?.description
-        }
         
-        if heroId != nil {
-            self.hero.isEnabled = true
-            self.beerImage.hero.id = heroId
-        }
+        setHero()
+        setBeerInfo()
     }
     
 
     @IBAction func closeAction(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
     }
-    /*
-    // MARK: - Navigation
+}
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension BeerDetailViewController {
+    func setHero() {
+        if heroId != nil {
+            self.hero.isEnabled = true
+            self.beerImage.hero.id = heroId
+        }
     }
-    */
-
+    
+    func setBeerInfo() {
+        if beer != nil {
+            beerImage.sd_setImage(with: URL(string: (beer?.imageUrl!)!))
+            beerTitle.text = beer?.name
+            beerSubtitle.text = beer?.tagline
+            beerDescr.text = beer?.description
+        }
+    }
 }
