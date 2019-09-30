@@ -105,7 +105,7 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, Be
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
         let beer = beers[indexPath.row]
         let vc = storyboard?.instantiateViewController(withIdentifier: "beerDetailViewController") as! BeerDetailViewController
-        vc.modalPresentationStyle = .overCurrentContext
+        vc.modalPresentationStyle = .overFullScreen
         vc.beer = beer
         
         //set hero

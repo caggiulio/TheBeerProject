@@ -21,15 +21,14 @@ class BeerListViewModel: NSObject {
     func fetchBeers(page: Int, beerName: String = "", category: String = "") {
         firstly {
             API().getBeers(page: page, beerName: beerName, category: category)
-            }.done { (json) in
-                let beersJson = json.arrayValue
-                var beers: [Beer] = [Beer]()
-                for beerJson in beersJson {
-                    let beer = Beer(beerJson)
-                    beers.append(beer)
-                }
-                self.delegate?.passBeers(beers: beers)
-            }.catch { (error) in
+        }.map { (json) -> [Beer] in
+            let beers = json.arrayValue.map { (singleJs) -> Beer in
+                return Beer(singleJs)
+            }
+            return beers
+        }.done { (beers) in
+            self.delegate?.passBeers(beers: beers)
+        }.catch { (error) in
                 print(error)
         }
     }
