@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import PromiseKit
+import HTTPiOSCLient
 
 protocol BeerListViewModelDelegate: AnyObject {
     func passBeers(beers: [Beer])
@@ -19,17 +19,13 @@ class BeerListViewModel: NSObject {
     weak var delegate: BeerListViewModelDelegate?
     
     func fetchBeers(page: Int, beerName: String = "", category: String = "") {
-        firstly {
-            API().getBeers(page: page, beerName: beerName, category: category)
-        }.map { (json) -> [Beer] in
-            let beers = json.arrayValue.map { (singleJs) -> Beer in
-                return Beer(singleJs)
+        API().getBeers(page: page, beerName: beerName, category: category) { (response) in
+            if let json = response?.json {
+                let beers = json.arrayValue.map { (singleJs) -> Beer in
+                    return Beer(singleJs)
+                }
+                self.delegate?.passBeers(beers: beers)
             }
-            return beers
-        }.done { (beers) in
-            self.delegate?.passBeers(beers: beers)
-        }.catch { (error) in
-                print(error)
         }
     }
 }

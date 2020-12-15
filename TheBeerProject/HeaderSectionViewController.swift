@@ -14,29 +14,32 @@ protocol HeaderSectionViewControllerDelegate: AnyObject {
 
 class HeaderSectionViewController: UIViewController {
 
-    @IBOutlet weak var offersView: UIView!
-    @IBOutlet weak var categoryCollection: UICollectionView!
+    var offersView: UIView = UIView(frame: .zero)
+    var categoryCollection: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+    
     weak var delegate: HeaderSectionViewControllerDelegate?
     
     var categories = ["All", "Pilsner", "Lager", "Ale", "Amber", "Dark", "Brown", "Cream", "Red", "Golden", "Fruit", "Honey"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setHeaderView()
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        
+        self.view.addSubview(categoryCollection)
+        categoryCollection.setCollectionViewLayout(layout, animated: false)
+        categoryCollection.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: "categoryCollectionViewCell")
+        
         categoryCollection.delegate = self
         categoryCollection.dataSource = self
-        // Do any additional setup after loading the view.
+                
+        configureUI()
+        setConstraints()
     }
 }
 
-extension HeaderSectionViewController {
-    func setHeaderView() {
-        offersView.clipsToBounds = true
-        offersView.layer.cornerRadius = 20
-    }
-}
-
-extension HeaderSectionViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension HeaderSectionViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return categories.count
     }
@@ -48,8 +51,38 @@ extension HeaderSectionViewController: UICollectionViewDelegate, UICollectionVie
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 45)
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let category = categories[indexPath.row]
         self.delegate?.passCategry(category: category)
+    }
+    
+    func configureUI() {
+        self.view.addSubview(offersView)
+        
+        offersView.backgroundColor = UIColor(named: "Gold")
+        offersView.clipsToBounds = true
+        offersView.layer.cornerRadius = 20
+        
+        categoryCollection.backgroundColor = UIColor(named: "AppMainColor")
+    }
+    
+    func setConstraints() {
+        offersView.translatesAutoresizingMaskIntoConstraints = false
+        categoryCollection.translatesAutoresizingMaskIntoConstraints = false
+        
+        //OFFERS VIEW
+        offersView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 10).isActive = true
+        offersView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+        offersView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
+        offersView.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
+        //COLLECTIONVIEW
+        categoryCollection.topAnchor.constraint(equalTo: self.offersView.bottomAnchor, constant: 10).isActive = true
+        categoryCollection.heightAnchor.constraint(equalToConstant: 80).isActive = true
+        categoryCollection.widthAnchor.constraint(equalTo: self.view.widthAnchor).isActive = true
     }
 }

@@ -14,16 +14,23 @@ class BeerDetailViewController: UIViewController {
     var beer: Beer?
     var heroId: String?
 
-    @IBOutlet weak var beerDescr: UILabel!
-    @IBOutlet weak var beerTitle: UILabel!
-    @IBOutlet weak var beerSubtitle: UILabel!
-    @IBOutlet weak var beerImage: UIImageView!
+    var containerView: UIView = UIView(frame: .zero)
+    var infoStackView: UIStackView = UIStackView(frame: .zero)
+    
+    var beerDescr: UILabel = UILabel(frame: .zero)
+    var beerTitle: UILabel = UILabel(frame: .zero)
+    var beerSubtitle: UILabel = UILabel(frame: .zero)
+    var beerImage: UIImageView = UIImageView(frame: .zero)
+    var transparentView: UIView = UIView(frame: .zero)
+    var closeButton: UIButton = UIButton(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setHero()
         setBeerInfo()
+        configureUI()
+        setConstraints()
     }
     
 

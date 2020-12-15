@@ -14,7 +14,7 @@ import Hero
 
 class BeerListViewController: UIViewController {
 
-    @IBOutlet weak var beerTableView: UITableView!
+    var beerTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     
     var header: UIView?
     var beerListViewModel: BeerListViewModel?
@@ -29,7 +29,7 @@ class BeerListViewController: UIViewController {
     var query: String? {
         didSet {
             page = 1
-            Alamofire.SessionManager.default.session.getAllTasks { (tasks) in
+            AF.session.getAllTasks { (tasks) in
                 tasks.forEach { $0.cancel()}
             }
             beers.removeAll()
@@ -45,9 +45,16 @@ class BeerListViewController: UIViewController {
         }
     }
     
+    private let refreshControl = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Beer Box"
+        configureUI()
+        setConstraints()
+        
+        beerTableView.register(BeerTableViewCell.self, forCellReuseIdentifier: "beerTableViewCell")
+        
         beerListViewModel = BeerListViewModel()
         beerListViewModel!.delegate = self
         beerListViewModel?.fetchBeers(page: self.page)
@@ -59,6 +66,10 @@ class BeerListViewController: UIViewController {
         
         setSearchBar()
         setHeaderViewPopular()
+        
+        refreshControl.tintColor = UIColor.white
+        beerTableView.refreshControl = refreshControl
+        refreshControl.addTarget(beerTableView, action: #selector(beerTableView.reloadData), for: .valueChanged)
     }
 }
 
@@ -104,7 +115,8 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, Be
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
         let beer = beers[indexPath.row]
-        let vc = storyboard?.instantiateViewController(withIdentifier: "beerDetailViewController") as! BeerDetailViewController
+        let vc: BeerDetailViewController = BeerDetailViewController()
+        
         vc.modalPresentationStyle = .overFullScreen
         vc.beer = beer
         
@@ -115,6 +127,10 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, Be
         DispatchQueue.main.async {
             self.present(vc, animated: true, completion: nil)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 248
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -151,14 +167,37 @@ extension BeerListViewController: UISearchBarDelegate {
 extension BeerListViewController {
     func setHeaderViewPopular() {
         header = UIView.init(frame: CGRect.init(x: 0, y: 0, width: view.frame.width, height: 230))
-        guard let childViewController = storyboard?.instantiateViewController(withIdentifier: "headerSectionViewController") as? HeaderSectionViewController else {
-            return
-        }
+        let childViewController = HeaderSectionViewController()
         childViewController.delegate = self
         childViewController.view.frame = header!.frame
         addChild(childViewController)
         header!.addSubview(childViewController.view)
         didMove(toParent: self)
+    }
+    
+    func configureUI() {
+        self.view.addSubview(beerTableView)
+        beerTableView.backgroundColor = UIColor(named: "AppMainColor")
+        
+        if #available(iOS 13.0, *) {
+            let appearance = UINavigationBarAppearance()
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+            appearance.backgroundColor = UIColor(named: "AppMainColor")
+
+            navigationItem.standardAppearance = appearance
+            navigationItem.scrollEdgeAppearance = appearance
+        } else {
+            // Fallback on earlier versions
+        }
+    }
+    
+    func setConstraints() {
+        beerTableView.translatesAutoresizingMaskIntoConstraints = false
+        beerTableView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+        beerTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
+        beerTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
+        beerTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
 }
 

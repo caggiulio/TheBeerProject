@@ -5,11 +5,9 @@ target 'TheBeerProject' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
    # Pods for TheMovieDBApp
-  pod 'Alamofire'
-  pod 'SwiftyJSON'
   pod 'Hero'
-  pod 'PromiseKit'
   pod 'SDWebImage'
+  pod 'HTTPiOSCLient', :git => 'https://github.com/caggiulio/HTTPiOSClient'
   # Pods for TheBeerProject
 
   target 'TheBeerProjectTests' do

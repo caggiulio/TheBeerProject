@@ -36,7 +36,7 @@ public class RestClient {
             let query: String = baseURL+URIString
             
             print(query)
-            Alamofire.request(query, method: method,
+            AF.request(query, method: method,
                               parameters: method == .get ? nil : parameters,
                               encoding: JSONEncoding.default,
                               headers: header).responseJSON { (response) in
