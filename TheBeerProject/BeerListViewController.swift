@@ -18,34 +18,19 @@ class BeerListViewController: UIViewController {
     
     var header: UIView?
     var beerListViewModel: BeerListViewModel?
-    var beers: [Beer] = [Beer]() {
-        didSet {
-            beerTableView.reloadData()
-        }
-    }
     
-    var page: Int = 1
     let search = UISearchController(searchResultsController: nil)
-    var query: String? {
-        didSet {
-            page = 1
-            AF.session.getAllTasks { (tasks) in
-                tasks.forEach { $0.cancel()}
-            }
-            beers.removeAll()
-            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "", category: self.category ?? "")
-        }
-    }
-    
-    var category: String? {
-        didSet {
-            page = 1
-            beers.removeAll()
-            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "", category: self.category ?? "")
-        }
-    }
     
     private let refreshControl = UIRefreshControl()
+    
+    init() {
+        super.init(nibName: nil, bundle: nil)
+        self.beerListViewModel = BeerListViewModel(viewController: self)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,9 +40,6 @@ class BeerListViewController: UIViewController {
         
         beerTableView.register(BeerTableViewCell.self, forCellReuseIdentifier: "beerTableViewCell")
         
-        beerListViewModel = BeerListViewModel()
-        beerListViewModel!.delegate = self
-        beerListViewModel?.fetchBeers(page: self.page)
         beerTableView.delegate = self
         beerTableView.dataSource = self
         
@@ -71,31 +53,28 @@ class BeerListViewController: UIViewController {
         beerTableView.refreshControl = refreshControl
         refreshControl.addTarget(beerTableView, action: #selector(beerTableView.reloadData), for: .valueChanged)
     }
+    
+    func reloadData() {
+        self.beerTableView.reloadData()
+    }
 }
 
-extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, BeerListViewModelDelegate, HeaderSectionViewControllerDelegate {
+extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, HeaderSectionViewControllerDelegate {
     func passCategry(category: String) {
-        self.category = category
-    }
-    
-    func passBeers(beers: [Beer]) {
-        if beers.count > 0 {
-            for beer in beers {
-                self.beers.append(beer)
-            }
-            page += 1
-        }
+        beerListViewModel?.category = category
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return beers.count
+        return beerListViewModel?.getBeersDataCount() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "beerTableViewCell") as! BeerTableViewCell
-        let beer = beers[indexPath.row]
         
-        cell.fillCell(beer: beer)
+        if let beer = beerListViewModel?.getBeerAtIndexPath(indexPath: indexPath) {
+            cell.fillCell(beer: beer)
+        }
+        
         cell.selectionStyle = .none
         
         //set heroId
@@ -106,26 +85,25 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, Be
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastElement = beers.count - 1
-        if((indexPath.row == lastElement)) {
-            self.beerListViewModel?.fetchBeers(page: page, beerName: query ?? "", category: self.category ?? "")
+        let lastElement = ((beerListViewModel?.getBeersDataCount() ?? 0) - 1)
+        if((indexPath.row == lastElement)) && ((beerListViewModel?.getBeersDataCount() ?? 0) > 2) {
+            self.beerListViewModel?.getBeers(page: beerListViewModel?.page ?? 0, beerName: self.beerListViewModel?.query ?? "", category: self.beerListViewModel?.category ?? "")
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
-        let beer = beers[indexPath.row]
-        let vc: BeerDetailViewController = BeerDetailViewController()
-        
-        vc.modalPresentationStyle = .overFullScreen
-        vc.beer = beer
-        
-        //set hero
-        vc.hero.isEnabled = true
-        vc.heroId = heroId
-        
-        DispatchQueue.main.async {
-            self.present(vc, animated: true, completion: nil)
+        if let beer = beerListViewModel?.getBeerAtIndexPath(indexPath: indexPath) {
+            let vc: BeerDetailViewController = BeerDetailViewController(viewModel: BeerDetailViewModel(beer: beer))
+            vc.modalPresentationStyle = .overFullScreen
+            
+            //set hero
+            vc.hero.isEnabled = true
+            vc.heroId = heroId
+            
+            DispatchQueue.main.async {
+                self.present(vc, animated: true, completion: nil)
+            }
         }
     }
     
@@ -156,11 +134,7 @@ extension BeerListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.setTextColorAndTextFont(color: .white, font: UIFont.systemFont(ofSize: 12))
         
-        query = searchText
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        searchBar.text = query
+        beerListViewModel?.query = searchText
     }
 }
 
@@ -200,5 +174,3 @@ extension BeerListViewController {
         beerTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
     }
 }
-
-

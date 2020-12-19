@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 
 public extension UISearchBar {
     func setTextColorAndTextFont(color: UIColor, font: UIFont?) {
@@ -18,4 +19,12 @@ public extension UISearchBar {
             tf.font = font
         }
     }
+}
+
+extension Array where Element: Equatable {
+      mutating func removeEqualItems(_ item: Element) {
+            self = self.filter { (currentItem: Element) -> Bool in
+              return currentItem != item
+            }
+      }
 }

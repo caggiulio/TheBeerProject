@@ -11,7 +11,11 @@ import Hero
 
 class BeerDetailViewController: UIViewController {
     
-    var beer: Beer?
+    var beerDetailViewModel: BeerDetailViewModel? {
+        didSet {
+            beerDetailViewModel?.viewController = self
+        }
+    }
     var heroId: String?
 
     var containerView: UIView = UIView(frame: .zero)
@@ -24,11 +28,23 @@ class BeerDetailViewController: UIViewController {
     var transparentView: UIView = UIView(frame: .zero)
     var closeButton: UIButton = UIButton(frame: .zero)
     
+    init(viewModel: BeerDetailViewModel) {
+        super.init(nibName: nil, bundle: nil)
+        setViewModel(vm: viewModel)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setViewModel(vm: BeerDetailViewModel) {
+        self.beerDetailViewModel = vm
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setHero()
-        setBeerInfo()
         configureUI()
         setConstraints()
     }
@@ -44,15 +60,6 @@ extension BeerDetailViewController {
         if heroId != nil {
             self.hero.isEnabled = true
             self.beerImage.hero.id = heroId
-        }
-    }
-    
-    func setBeerInfo() {
-        if beer != nil {
-            beerImage.sd_setImage(with: URL(string: (beer?.imageUrl!)!))
-            beerTitle.text = beer?.name
-            beerSubtitle.text = beer?.tagline
-            beerDescr.text = beer?.description
         }
     }
 }
