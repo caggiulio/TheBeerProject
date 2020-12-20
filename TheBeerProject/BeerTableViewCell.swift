@@ -15,6 +15,7 @@ class BeerTableViewCell: UITableViewCell {
     var beerImage: UIImageView = UIImageView(frame: .zero)
     var stackView: UIStackView = UIStackView(frame: .zero)
     
+    var viewModel: BeerListTableViewCellViewModel?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -35,13 +36,6 @@ class BeerTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
-    }
-    
-    func fillCell(beer: Beer) {
-        self.beerImage.sd_setImage(with: URL(string: beer.imageUrl!))
-        self.beerTitle.text = beer.name
-        self.beerSubtitle.text = beer.tagline
-        self.beerDescr.text = beer.description
     }
     
     func configureUI() {

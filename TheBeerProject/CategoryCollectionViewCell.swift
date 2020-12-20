@@ -12,6 +12,8 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     var containerCategoryCell: UIView = UIView(frame: .zero)
     var categoryName: UILabel = UILabel(frame: .zero)
     
+    var viewModel: HeaderCellViewModel?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureUI()

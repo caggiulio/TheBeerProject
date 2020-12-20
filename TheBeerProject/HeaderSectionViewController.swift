@@ -47,7 +47,9 @@ extension HeaderSectionViewController: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let category = categories[indexPath.row]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "categoryCollectionViewCell", for: indexPath) as! CategoryCollectionViewCell
-        cell.categoryName.text = category
+        let vm = HeaderCellViewModel(category: category)
+        vm.headerCellController = cell
+        cell.viewModel = vm
         return cell
     }
     

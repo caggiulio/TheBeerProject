@@ -18,7 +18,11 @@ class BeerDetailViewModel: NSObject {
         }
     }
     
-    var beerVM: Beer?
+    var beerVM: Beer? {
+        didSet {
+            updateUI()
+        }
+    }
     
     init(beer: Beer) {
         super.init()

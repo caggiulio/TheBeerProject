@@ -72,7 +72,9 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, He
         let cell = tableView.dequeueReusableCell(withIdentifier: "beerTableViewCell") as! BeerTableViewCell
         
         if let beer = beerListViewModel?.getBeerAtIndexPath(indexPath: indexPath) {
-            cell.fillCell(beer: beer)
+            let vm = BeerListTableViewCellViewModel(beer: beer)
+            vm.cellController = cell
+            cell.viewModel = vm
         }
         
         cell.selectionStyle = .none
@@ -94,7 +96,8 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, He
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
         if let beer = beerListViewModel?.getBeerAtIndexPath(indexPath: indexPath) {
-            let vc: BeerDetailViewController = BeerDetailViewController(viewModel: BeerDetailViewModel(beer: beer))
+            let vm = BeerDetailViewModel(beer: beer)
+            let vc: BeerDetailViewController = BeerDetailViewController(viewModel: vm)
             vc.modalPresentationStyle = .overFullScreen
             
             //set hero
