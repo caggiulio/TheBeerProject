@@ -12,7 +12,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     var containerCategoryCell: UIView = UIView(frame: .zero)
     var categoryName: UILabel = UILabel(frame: .zero)
     
-    var viewModel: HeaderCellViewModel?
+    var presenter: HeaderCellPresenter?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,6 +24,10 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    func setPresenter(presenter: HeaderCellPresenter) {
+        self.presenter = presenter
+        presenter.delegate = self
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -64,5 +68,11 @@ class CategoryCollectionViewCell: UICollectionViewCell {
                 containerCategoryCell.backgroundColor = .darkGray
             }
         }
+    }
+}
+
+extension CategoryCollectionViewCell: HeaderCellPresenterDelegate {
+    func updateUI(category: String?) {
+        categoryName.text = category
     }
 }

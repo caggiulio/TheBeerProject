@@ -1,5 +1,5 @@
 //
-//  BeerListViewModel.swift
+//  BeerListPresenter.swift
 //  TheBeerProject
 //
 //  Created by Nunzio Giulio Caggegi on 20/08/2019.
@@ -10,13 +10,17 @@ import Foundation
 import HTTPiOSCLient
 import Alamofire
 
-class BeerListViewModel: NSObject, BeerRepoDelegate {
+protocol BeerListPresenterDelegate: NSObject {
+    func reload()
+}
+
+class BeerListPresenter: NSObject, BeerRepoDelegate {
     
-    weak var beerListViewController: BeerListViewController?
+    weak var delegate: BeerListPresenterDelegate?
     
     private var beers: [Beer] = [Beer]() {
         didSet {
-            self.beerListViewController?.reloadData()
+            delegate?.reload()
         }
     }
     
@@ -38,9 +42,9 @@ class BeerListViewModel: NSObject, BeerRepoDelegate {
     
     var searchTask: DispatchWorkItem?
     
-    init(viewController: BeerListViewController) {
+    init(delegate: BeerListPresenterDelegate) {
         super.init()
-        self.beerListViewController = viewController
+        self.delegate = delegate
         BeerRepo.addBeerRepoObserver(obs: self)
     }
     

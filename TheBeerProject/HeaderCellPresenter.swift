@@ -1,5 +1,5 @@
 //
-//  HeaderCellViewModel.swift
+//  HeaderCellPresenter.swift
 //  TheBeerProject
 //
 //  Created by Nunzio Giulio Caggegi on 20/12/20.
@@ -8,13 +8,18 @@
 
 import Foundation
 
-class HeaderCellViewModel: NSObject {
+protocol HeaderCellPresenterDelegate: NSObject {
+    func updateUI(category: String?)
+}
+
+class HeaderCellPresenter: NSObject {
     
-    var headerCellController: CategoryCollectionViewCell? {
+    weak var delegate: HeaderCellPresenterDelegate? {
         didSet {
-            updateUI()
+            delegate?.updateUI(category: category)
         }
     }
+    
     var category: String?
     
     init(category: String) {
@@ -25,9 +30,4 @@ class HeaderCellViewModel: NSObject {
     func setCategory(category: String) {
         self.category = category
     }
-    
-    func updateUI() {
-        headerCellController?.categoryName.text = category
-    }
-    
 }

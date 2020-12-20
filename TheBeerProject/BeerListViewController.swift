@@ -17,7 +17,7 @@ class BeerListViewController: UIViewController {
     var beerTableView: UITableView = UITableView(frame: .zero, style: .grouped)
     
     var header: UIView?
-    var beerListViewModel: BeerListViewModel?
+    var beerListPresenter: BeerListPresenter?
     
     let search = UISearchController(searchResultsController: nil)
     
@@ -25,7 +25,7 @@ class BeerListViewController: UIViewController {
     
     init() {
         super.init(nibName: nil, bundle: nil)
-        self.beerListViewModel = BeerListViewModel(viewController: self)
+        self.beerListPresenter = BeerListPresenter(delegate: self)
     }
     
     required init?(coder: NSCoder) {
@@ -61,20 +61,19 @@ class BeerListViewController: UIViewController {
 
 extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, HeaderSectionViewControllerDelegate {
     func passCategry(category: String) {
-        beerListViewModel?.category = category
+        beerListPresenter?.category = category
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return beerListViewModel?.getBeersDataCount() ?? 0
+        return beerListPresenter?.getBeersDataCount() ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "beerTableViewCell") as! BeerTableViewCell
         
-        if let beer = beerListViewModel?.getBeerAtIndexPath(indexPath: indexPath) {
-            let vm = BeerListTableViewCellViewModel(beer: beer)
-            vm.cellController = cell
-            cell.viewModel = vm
+        if let beer = beerListPresenter?.getBeerAtIndexPath(indexPath: indexPath) {
+            let cellPresenter = BeerListTableViewCellPresenter(beer: beer)
+            cell.setPresenter(presenter: cellPresenter)
         }
         
         cell.selectionStyle = .none
@@ -87,17 +86,17 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, He
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let lastElement = ((beerListViewModel?.getBeersDataCount() ?? 0) - 1)
-        if((indexPath.row == lastElement)) && ((beerListViewModel?.getBeersDataCount() ?? 0) > 2) {
-            self.beerListViewModel?.getBeers(page: beerListViewModel?.page ?? 0, beerName: self.beerListViewModel?.query ?? "", category: self.beerListViewModel?.category ?? "")
+        let lastElement = ((beerListPresenter?.getBeersDataCount() ?? 0) - 1)
+        if((indexPath.row == lastElement)) && ((beerListPresenter?.getBeersDataCount() ?? 0) > 2) {
+            self.beerListPresenter?.getBeers(page: beerListPresenter?.page ?? 0, beerName: self.beerListPresenter?.query ?? "", category: self.beerListPresenter?.category ?? "")
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
-        if let beer = beerListViewModel?.getBeerAtIndexPath(indexPath: indexPath) {
-            let vm = BeerDetailViewModel(beer: beer)
-            let vc: BeerDetailViewController = BeerDetailViewController(viewModel: vm)
+        if let beer = beerListPresenter?.getBeerAtIndexPath(indexPath: indexPath) {
+            let presenter = BeerDetailPresenter(beer: beer)
+            let vc: BeerDetailViewController = BeerDetailViewController(presenter: presenter)
             vc.modalPresentationStyle = .overFullScreen
             
             //set hero
@@ -137,7 +136,7 @@ extension BeerListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchBar.setTextColorAndTextFont(color: .white, font: UIFont.systemFont(ofSize: 12))
         
-        beerListViewModel?.query = searchText
+        beerListPresenter?.query = searchText
     }
 }
 
@@ -175,5 +174,11 @@ extension BeerListViewController {
         beerTableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
         beerTableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
         beerTableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    }
+}
+
+extension BeerListViewController: BeerListPresenterDelegate {
+    func reload() {
+        self.reloadData()
     }
 }

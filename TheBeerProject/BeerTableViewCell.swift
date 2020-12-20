@@ -15,11 +15,16 @@ class BeerTableViewCell: UITableViewCell {
     var beerImage: UIImageView = UIImageView(frame: .zero)
     var stackView: UIStackView = UIStackView(frame: .zero)
     
-    var viewModel: BeerListTableViewCellViewModel?
+    var beerListCellPresenter: BeerListTableViewCellPresenter?
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+    }
+    
+    func setPresenter(presenter: BeerListTableViewCellPresenter) {
+        self.beerListCellPresenter = presenter
+        beerListCellPresenter?.delegate = self
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -84,5 +89,14 @@ class BeerTableViewCell: UITableViewCell {
         
         beerTitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
         beerSubtitle.heightAnchor.constraint(equalToConstant: 30).isActive = true
+    }
+}
+
+extension BeerTableViewCell: BeerListTableViewCellPresenterDelegate {
+    func updateUI(beer: Beer) {
+        beerImage.sd_setImage(with: URL(string: beer.imageUrl ?? ""))
+        beerTitle.text = beer.name
+        beerSubtitle.text = beer.tagline
+        beerDescr.text = beer.description
     }
 }
