@@ -8,15 +8,15 @@
 
 import Foundation
 
-protocol BeerDetailPresenterDelegate: NSObject {
+protocol BeerDetailPresenterView: NSObject {
     func updateUI(beer: Beer?)
 }
 
 class BeerDetailPresenter: NSObject {
     
-    weak var delegate: BeerDetailPresenterDelegate? {
+    weak var view: BeerDetailPresenterView? {
         didSet {
-            delegate?.updateUI(beer: beer)
+            view?.updateUI(beer: beer)
         }
     }
     
@@ -25,6 +25,10 @@ class BeerDetailPresenter: NSObject {
     init(beer: Beer) {
         super.init()
         setBeer(beer: beer)
+    }
+    
+    func attachView(view: BeerDetailPresenterView) {
+        self.view = view
     }
     
     func setBeer(beer: Beer) {

@@ -35,7 +35,7 @@ class BeerDetailViewController: UIViewController {
     
     func setPresenter(presenter: BeerDetailPresenter) {
         beerDetailPresenter = presenter
-        beerDetailPresenter?.delegate = self
+        beerDetailPresenter?.attachView(view: self)
     }
     
     override func viewDidLoad() {
@@ -61,7 +61,7 @@ extension BeerDetailViewController {
     }
 }
 
-extension BeerDetailViewController: BeerDetailPresenterDelegate {
+extension BeerDetailViewController: BeerDetailPresenterView {
     func updateUI(beer: Beer?) {
         beerImage.sd_setImage(with: URL(string: (beer?.imageUrl!)!))
         beerTitle.text = beer?.name

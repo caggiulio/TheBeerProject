@@ -10,17 +10,26 @@ import Foundation
 import HTTPiOSCLient
 import Alamofire
 
-protocol BeerListPresenterDelegate: NSObject {
+protocol BeerListPresenterView: NSObject {
     func reload()
 }
 
 class BeerListPresenter: NSObject, BeerRepoDelegate {
     
-    weak var delegate: BeerListPresenterDelegate?
+    weak var view: BeerListPresenterView?
+    
+    override init() {
+        super.init()
+        BeerRepo.addBeerRepoObserver(obs: self)
+    }
+    
+    func attachView(view: BeerListPresenterView) {
+        self.view = view
+    }
     
     private var beers: [Beer] = [Beer]() {
         didSet {
-            delegate?.reload()
+            view?.reload()
         }
     }
     
@@ -41,12 +50,6 @@ class BeerListPresenter: NSObject, BeerRepoDelegate {
     }
     
     var searchTask: DispatchWorkItem?
-    
-    init(delegate: BeerListPresenterDelegate) {
-        super.init()
-        self.delegate = delegate
-        BeerRepo.addBeerRepoObserver(obs: self)
-    }
     
     func getBeers(page: Int, beerName: String = "", category: String = "") {
         BeerRepo.fetchBeers(page: page, beerName: beerName, category: category)

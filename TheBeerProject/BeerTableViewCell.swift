@@ -24,7 +24,7 @@ class BeerTableViewCell: UITableViewCell {
     
     func setPresenter(presenter: BeerListTableViewCellPresenter) {
         self.beerListCellPresenter = presenter
-        beerListCellPresenter?.delegate = self
+        beerListCellPresenter?.attachView(view: self)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -92,7 +92,7 @@ class BeerTableViewCell: UITableViewCell {
     }
 }
 
-extension BeerTableViewCell: BeerListTableViewCellPresenterDelegate {
+extension BeerTableViewCell: BeerListTableViewCellPresenterView {
     func updateUI(beer: Beer) {
         beerImage.sd_setImage(with: URL(string: beer.imageUrl ?? ""))
         beerTitle.text = beer.name

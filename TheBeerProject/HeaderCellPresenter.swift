@@ -8,16 +8,20 @@
 
 import Foundation
 
-protocol HeaderCellPresenterDelegate: NSObject {
+protocol HeaderCellPresenterView: NSObject {
     func updateUI(category: String?)
 }
 
 class HeaderCellPresenter: NSObject {
     
-    weak var delegate: HeaderCellPresenterDelegate? {
+    weak var view: HeaderCellPresenterView? {
         didSet {
-            delegate?.updateUI(category: category)
+            view?.updateUI(category: category)
         }
+    }
+    
+    func attachView(view: HeaderCellPresenterView) {
+        self.view = view
     }
     
     var category: String?

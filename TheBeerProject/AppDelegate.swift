@@ -20,7 +20,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Falcon.setup(baseUrl: "api.punkapi.com/v2/")
         
         let window = UIWindow(frame: UIScreen.main.bounds)
-        let nc = MainNavigationViewController(rootViewController: BeerListViewController())
+        let nc = MainNavigationViewController()
+        let beerList = BeerListViewController(presenter: BeerListPresenter())
+        nc.viewControllers.append(beerList)
+        
         window.rootViewController = nc
         window.makeKeyAndVisible()
         self.window = window

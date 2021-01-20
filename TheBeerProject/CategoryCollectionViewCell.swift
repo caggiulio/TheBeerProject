@@ -26,7 +26,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     func setPresenter(presenter: HeaderCellPresenter) {
         self.presenter = presenter
-        presenter.delegate = self
+        presenter.attachView(view: self)
     }
     
     override func layoutSubviews() {
@@ -71,7 +71,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension CategoryCollectionViewCell: HeaderCellPresenterDelegate {
+extension CategoryCollectionViewCell: HeaderCellPresenterView {
     func updateUI(category: String?) {
         categoryName.text = category
     }

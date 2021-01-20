@@ -8,18 +8,22 @@
 
 import Foundation
 
-protocol BeerListTableViewCellPresenterDelegate: NSObject {
+protocol BeerListTableViewCellPresenterView: NSObject {
     func updateUI(beer: Beer)
 }
 
 class BeerListTableViewCellPresenter: NSObject {
     
-    weak var delegate: BeerListTableViewCellPresenterDelegate? {
+    weak var view: BeerListTableViewCellPresenterView? {
         didSet {
             if let _ = beer {
-                delegate?.updateUI(beer: beer!)
+                view?.updateUI(beer: beer!)
             }
         }
+    }
+    
+    func attachView(view: BeerListTableViewCellPresenterView) {
+        self.view = view
     }
     
     var beer: Beer?

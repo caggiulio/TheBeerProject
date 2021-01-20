@@ -23,13 +23,18 @@ class BeerListViewController: UIViewController {
     
     private let refreshControl = UIRefreshControl()
     
-    init() {
+    init(presenter: BeerListPresenter) {
         super.init(nibName: nil, bundle: nil)
-        self.beerListPresenter = BeerListPresenter(delegate: self)
+        setPresenter(presenter: presenter)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func setPresenter(presenter: BeerListPresenter) {
+        beerListPresenter = presenter
+        beerListPresenter?.attachView(view: self)
     }
     
     override func viewDidLoad() {
@@ -177,7 +182,7 @@ extension BeerListViewController {
     }
 }
 
-extension BeerListViewController: BeerListPresenterDelegate {
+extension BeerListViewController: BeerListPresenterView {
     func reload() {
         self.reloadData()
     }
