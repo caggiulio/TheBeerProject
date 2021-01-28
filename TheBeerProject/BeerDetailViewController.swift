@@ -11,11 +11,7 @@ import Hero
 
 class BeerDetailViewController: UIViewController {
     
-    var beerDetailViewModel: BeerDetailViewModel? {
-        didSet {
-            beerDetailViewModel?.viewController = self
-        }
-    }
+    var beerDetailViewModel: BeerDetailViewModel?
     var heroId: String?
 
     var containerView: UIView = UIView(frame: .zero)
@@ -39,6 +35,7 @@ class BeerDetailViewController: UIViewController {
     
     func setViewModel(vm: BeerDetailViewModel) {
         self.beerDetailViewModel = vm
+        self.beerDetailViewModel?.viewController = self
     }
     
     override func viewDidLoad() {

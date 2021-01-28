@@ -38,9 +38,8 @@ class BeerListViewModel: NSObject, BeerRepoDelegate {
     
     var searchTask: DispatchWorkItem?
     
-    init(viewController: BeerListViewController) {
+    override init() {
         super.init()
-        self.beerListViewController = viewController
         BeerRepo.addBeerRepoObserver(obs: self)
     }
     

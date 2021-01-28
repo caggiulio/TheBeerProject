@@ -23,9 +23,10 @@ class BeerListViewController: UIViewController {
     
     private let refreshControl = UIRefreshControl()
     
-    init() {
+    init(viewModel: BeerListViewModel) {
         super.init(nibName: nil, bundle: nil)
-        self.beerListViewModel = BeerListViewModel(viewController: self)
+        self.beerListViewModel = viewModel
+        self.beerListViewModel?.beerListViewController = self
     }
     
     required init?(coder: NSCoder) {

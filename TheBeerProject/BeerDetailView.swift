@@ -50,7 +50,7 @@ extension BeerDetailViewController {
         transparentView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
         
         //CLOSE BUTTON
-        closeButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 15).isActive = true
+        closeButton.topAnchor.constraint(equalTo: transparentView.topAnchor, constant: 30).isActive = true
         closeButton.trailingAnchor.constraint(equalTo: transparentView.trailingAnchor, constant: -15).isActive = true
         
         //CONTAINER VIEW
