@@ -11,23 +11,32 @@ import Foundation
 class BeerDetailAssembler: BeerDetailAssmblerInjector {}
 
 protocol BeerDetailAssmblerInjector {
-    func resolve(beer: Beer, beerRepo: BeerRepo) -> BeerDetailViewController
+    func resolve(beer: Beer) -> BeerDetailViewController
     
-    func resolve(beer: Beer, beerRepo: BeerRepo) -> BeerDetailPresenter
+    func resolve(beer: Beer) -> BeerDetailPresenter
     
-    func resolve(beerRepo: BeerRepo) -> BeerRepo
+    func resolve() -> BeerRepo
+    
+    func resolve() -> API
 }
 
 extension BeerDetailAssembler {
-    func resolve(beer: Beer, beerRepo: BeerRepo) -> BeerDetailViewController {
-        return BeerDetailViewController(presenter: resolve(beer: beer, beerRepo: beerRepo))
+    func resolve(beer: Beer) -> BeerDetailViewController {
+        return BeerDetailViewController(presenter: resolve(beer: beer))
     }
     
-    func resolve(beer: Beer, beerRepo: BeerRepo) -> BeerDetailPresenter {
-        return BeerDetailPresenter(beer: beer, beerRepo: resolve(beerRepo: beerRepo))
+    func resolve(beer: Beer) -> BeerDetailPresenter {
+        return BeerDetailPresenter(beer: beer, beerRepo: resolve())
     }
     
-    func resolve(beerRepo: BeerRepo) -> BeerRepo {
-        return beerRepo
+    func resolve() -> BeerRepo {
+        if let repo = RepoContainer.repoContainer.first, repo is BeerRepo {
+            return repo as! BeerRepo
+        }
+        return BeerRepo(service: resolve())
+    }
+    
+    func resolve() -> API {
+        return API()
     }
 }
