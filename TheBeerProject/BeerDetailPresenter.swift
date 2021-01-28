@@ -21,10 +21,12 @@ class BeerDetailPresenter: NSObject {
     }
     
     var beer: Beer?
+    var beerRepo: BeerRepo?
     
-    init(beer: Beer) {
+    init(beer: Beer, beerRepo: BeerRepo) {
         super.init()
         setBeer(beer: beer)
+        setRepo(beerRepo: beerRepo)
     }
     
     func attachView(view: BeerDetailPresenterView) {
@@ -33,5 +35,9 @@ class BeerDetailPresenter: NSObject {
     
     func setBeer(beer: Beer) {
         self.beer = beer
+    }
+    
+    func setRepo(beerRepo: BeerRepo) {
+        self.beerRepo = beerRepo
     }
 }

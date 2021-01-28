@@ -17,10 +17,19 @@ protocol BeerListPresenterView: NSObject {
 class BeerListPresenter: NSObject, BeerRepoDelegate {
     
     weak var view: BeerListPresenterView?
+    var beerRepo: BeerRepo? {
+        didSet {
+            beerRepo?.addBeerRepoObserver(obs: self)
+        }
+    }
     
-    override init() {
+    init(beerRepo: BeerRepo) {
         super.init()
-        BeerRepo.addBeerRepoObserver(obs: self)
+        setBeerRepo(beerRepo: beerRepo)
+    }
+    
+    func setBeerRepo(beerRepo: BeerRepo) {
+        self.beerRepo = beerRepo
     }
     
     func attachView(view: BeerListPresenterView) {
@@ -52,7 +61,7 @@ class BeerListPresenter: NSObject, BeerRepoDelegate {
     var searchTask: DispatchWorkItem?
     
     func getBeers(page: Int, beerName: String = "", category: String = "") {
-        BeerRepo.fetchBeers(page: page, beerName: beerName, category: category)
+        beerRepo?.fetchBeers(page: page, beerName: beerName, category: category)
     }
     
     func search(string: String, category: String) {
@@ -60,7 +69,7 @@ class BeerListPresenter: NSObject, BeerRepoDelegate {
         
         self.searchTask?.cancel()
         let task = DispatchWorkItem { [weak self] in
-            BeerRepo.fetchBeers(page: self?.page ?? 1, beerName: string, category: category)
+            self?.beerRepo?.fetchBeers(page: self?.page ?? 1, beerName: string, category: category)
         }
         self.searchTask = task
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5, execute: task)

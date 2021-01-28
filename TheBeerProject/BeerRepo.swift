@@ -14,7 +14,9 @@ protocol BeerRepoDelegate: AnyObject {
 
 class BeerRepo: NSObject {
     
-    static var observers: [BeerRepoDelegate] = [BeerRepoDelegate]() {
+    var service: API?
+    
+    var observers: [BeerRepoDelegate] = [BeerRepoDelegate]() {
         didSet {
             if observers.count == 1 && beers.count == 0 {
                 setup()
@@ -26,18 +28,27 @@ class BeerRepo: NSObject {
         }
     }
     
-    static private var beers: [Beer]  = [Beer]() {
+    private var beers: [Beer]  = [Beer]() {
         didSet {
             self.notifyObservers()
         }
     }
     
-    private static func setup() {
-        BeerRepo.fetchBeers(page: 1)
+    private func setup() {
+        self.fetchBeers(page: 1)
     }
     
+    init(service: API) {
+        super.init()
+        setService(service: service)
+        RepoContainer.addContainer(repo: self)
+    }
     
-    static func fetchBeers(page: Int, beerName: String = "", category: String = "") {
+    func setService(service: API) {
+        self.service = service
+    }
+    
+    func fetchBeers(page: Int, beerName: String = "", category: String = "") {
         if (category != "" || beerName != "") && page == 1 {
             self.beers.removeAll()
         }
@@ -51,29 +62,29 @@ class BeerRepo: NSObject {
         }
     }
     
-    private static func notifyObservers() {
+    private func notifyObservers() {
         for obs in observers {
             obs.notifyObservers(beers: beers)
         }
     }
     
-    static func getBeers() -> [Beer] {
+    func getBeers() -> [Beer] {
         return self.beers
     }
     
-    static func editBeer(beer: Beer, index: Int) {
+    func editBeer(beer: Beer, index: Int) {
         self.beers[index] = beer
     }
     
-    static func deleteBeer(index: Int) {
+    func deleteBeer(index: Int) {
         self.beers.remove(at: index)
     }
     
-    static func addBeerRepoObserver(obs: BeerRepoDelegate) {
+    func addBeerRepoObserver(obs: BeerRepoDelegate) {
         self.observers.append(obs)
     }
     
-    static func removeBeerRepoObserver(obs: BeerRepoDelegate) {
+    func removeBeerRepoObserver(obs: BeerRepoDelegate) {
         var i: Int = 0
         for o in observers {
             if obs === o {

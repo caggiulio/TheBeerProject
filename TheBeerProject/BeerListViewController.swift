@@ -99,9 +99,9 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, He
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
-        if let beer = beerListPresenter?.getBeerAtIndexPath(indexPath: indexPath) {
+        if let beer = beerListPresenter?.getBeerAtIndexPath(indexPath: indexPath), let beerRepo = RepoContainer.repoContainer.first, beerRepo is BeerRepo {
             let assembler: BeerDetailAssmblerInjector = BeerDetailAssembler()
-            let vc: BeerDetailViewController = assembler.resolve(beer: beer)
+            let vc: BeerDetailViewController = assembler.resolve(beer: beer, beerRepo: beerRepo as! BeerRepo)
             vc.modalPresentationStyle = .overFullScreen
             
             //set hero

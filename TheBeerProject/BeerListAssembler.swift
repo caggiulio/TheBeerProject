@@ -16,6 +16,8 @@ protocol BeerListAssemblerInjector {
     func resolve() -> BeerListPresenter
     
     func resolve() -> BeerRepo
+    
+    func resolve() -> API
 }
 
 extension BeerListAssembler {
@@ -24,10 +26,14 @@ extension BeerListAssembler {
     }
     
     func resolve() -> BeerListPresenter {
-        return BeerListPresenter()
+        return BeerListPresenter(beerRepo: resolve())
     }
     
     func resolve() -> BeerRepo {
-        return BeerRepo()
+        return BeerRepo(service: resolve())
+    }
+    
+    func resolve() -> API {
+        return API()
     }
 }
