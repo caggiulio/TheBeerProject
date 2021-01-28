@@ -21,8 +21,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let window = UIWindow(frame: UIScreen.main.bounds)
         let nc = MainNavigationViewController()
-        let beerList = BeerListViewController(presenter: BeerListPresenter())
-        nc.viewControllers.append(beerList)
+        let assembler: BeerListAssemblerInjector = BeerListAssembler()
+        let beerListVC: BeerListViewController = assembler.resolve()
+        nc.viewControllers.append(beerListVC)
         
         window.rootViewController = nc
         window.makeKeyAndVisible()

@@ -100,8 +100,8 @@ extension BeerListViewController: UITableViewDelegate, UITableViewDataSource, He
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let heroId: String = "cell\(indexPath.section)\(indexPath.row)beerList"
         if let beer = beerListPresenter?.getBeerAtIndexPath(indexPath: indexPath) {
-            let presenter = BeerDetailPresenter(beer: beer)
-            let vc: BeerDetailViewController = BeerDetailViewController(presenter: presenter)
+            let assembler: BeerDetailAssmblerInjector = BeerDetailAssembler()
+            let vc: BeerDetailViewController = assembler.resolve(beer: beer)
             vc.modalPresentationStyle = .overFullScreen
             
             //set hero
