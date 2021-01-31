@@ -94,7 +94,7 @@ class BeerTableViewCell: UITableViewCell {
 
 extension BeerTableViewCell: BeerListTableViewCellPresenterView {
     func updateUI(beer: Beer) {
-        beerImage.sd_setImage(with: URL(string: beer.imageUrl ?? ""))
+        beerImage.sd_setImage(with: URL(string: beer.image_url ?? ""))
         beerTitle.text = beer.name
         beerSubtitle.text = beer.tagline
         beerDescr.text = beer.description

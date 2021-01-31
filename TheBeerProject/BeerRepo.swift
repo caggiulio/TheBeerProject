@@ -53,11 +53,13 @@ class BeerRepo: NSObject {
             self.beers.removeAll()
         }
         API().getBeers(page: page, beerName: beerName, category: category) { (response) in
-            if let json = response?.json {
-                let beers = json.arrayValue.map { (singleJs) -> Beer in
-                    return Beer(singleJs)
+            if let data = try? response?.json?.rawData() {
+                let decoder = JSONDecoder()
+                let beersDecoded = try? decoder.decode(Beers.self, from: data)
+                if let decBeers = beersDecoded?.beers {
+                    self.beers += decBeers
                 }
-                self.beers += beers
+                print(beersDecoded?.beers?.count)
             }
         }
     }
