@@ -53,7 +53,7 @@ class BeerRepo: NSObject {
             self.beers.removeAll()
         }
         API().getBeers(page: page, beerName: beerName, category: category) { (response) in
-            if let data = try? response?.json?.rawData() {
+            if let data = try? response?.data {
                 let decoder = JSONDecoder()
                 let beersDecoded = try? decoder.decode(Beers.self, from: data)
                 if let decBeers = beersDecoded?.beers {

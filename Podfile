@@ -7,7 +7,7 @@ target 'TheBeerProject' do
    # Pods for TheMovieDBApp
   pod 'Hero'
   pod 'SDWebImage'
-  pod 'HTTPiOSCLient', :git => 'https://github.com/caggiulio/HTTPiOSClient'
+  pod 'Falcon', :git => 'https://github.com/caggiulio/FalconAlamofire'
   # Pods for TheBeerProject
 
   target 'TheBeerProjectTests' do

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import PromiseKit
 import SDWebImage
 import Alamofire
 import Hero

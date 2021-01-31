@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import HTTPiOSCLient
+import Falcon
 
 public class API: NSObject {
     
